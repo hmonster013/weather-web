@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis-data:/data
+
+  weather-api:
+    build: ./weather-api
+    ports:
+      - "8080:8080"
+    environment:
+      - WEATHER_API_KEY=TFFAHTGQP2Q6C8A6C8BU533RA
+      - WEATHER_API_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
+      - SPRING_PROFILES_ACTIVE=prod
+    volumes:
+      - ./weather-api:/app
+    stdin_open: true
+    
+volumes:
+  redis-data:
