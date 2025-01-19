@@ -37,7 +37,10 @@ public class WeatherService {
         ResponseEntity<WeatherData> response = restTemplate.exchange(url, HttpMethod.GET, null, WeatherData.class);
         WeatherData weatherData = response.getBody();
 
-        redisTemplate.opsForValue().set(cacheKey, weatherData, 12, TimeUnit.HOURS);
+        long randomSeconds = (long) (Math.random() * 60);
+        long expireTimeInSeconds = TimeUnit.HOURS.toSeconds(12) + randomSeconds;
+
+        redisTemplate.opsForValue().set(cacheKey, weatherData, expireTimeInSeconds, TimeUnit.SECONDS);
         
         return weatherData;
     }
